@@ -52,7 +52,6 @@ def main():
                 pg.draw.rect(screen, (255, 255, 0), [width - 190, 20, 180, 80])
             back_text = smallfont2.render('Main menu',True,(0,0,0))
             screen.blit(back_text, (width - 210+back_text.get_width()/2, 45))
-            pg.draw.line(screen, (0,0,0), (width/))
         clock.tick(FPS)
         pg.display.update()
 
