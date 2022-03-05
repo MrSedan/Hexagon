@@ -26,8 +26,14 @@ def main():
             pg.draw.rect(screen, (0, 0, 255), [width / 2 - 70, height - 200, 140, 40])
         else:
             pg.draw.rect(screen, (255, 255, 0), [width / 2 - 70, height - 200, 140, 40])
+        if width / 2 - 90 <= mouse[0] <= width / 2 + 90 and height - 400 <= mouse[1] <= height - 320:
+            pg.draw.rect(screen, (0, 0, 255), [width / 2 - 90, height - 400, 180, 80])
+        else:
+            pg.draw.rect(screen, (255, 255, 0), [width / 2 - 90, height - 400, 180, 80])
         quit_text = smallfont.render('Quit', True, (0, 0, 0))
         screen.blit(quit_text, (width / 2 - quit_text.get_width() / 2, height - 200))
+        play_text = smallfont.render('Play',True, (0,0,0))
+        screen.blit(play_text, (width/2 - play_text.get_width() / 2, height-380))
         clock.tick(FPS)
         pg.display.update()
 
