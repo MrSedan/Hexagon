@@ -1,0 +1,1 @@
+<h1>Hexagon game</h1>
