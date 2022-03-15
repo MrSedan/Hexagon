@@ -1,14 +1,37 @@
 import pygame as pg
+from math import cos, sin, pi
 from pygame.locals import *
 
 pg.init()
 clock = pg.time.Clock()
-FPS = 60
+FPS = 1488
 smallfont = pg.font.Font("./fonts/Montserrat-Regular.ttf", 35)
 smallfont2 = pg.font.Font("./fonts/Montserrat-Regular.ttf", 20)
+hex = pg.image.load('im1.png')
 
+
+def draw_regular_polygon(surface, color, vertex_count, radius, position, width=0):
+    n, r = vertex_count, radius
+    x, y = position
+    pg.draw.polygon(surface, color, [
+        (x + r * cos(2 * pi * i / n), y + r * sin(2 * pi * i / n))
+        for i in range(n)
+    ], width)
+
+
+def f(i):
+    if i < 5:
+        return i + 5
+    else:
+        return 13 - i
 
 def main():
+    def displayhexagon():
+        for i in range(9):
+            x = i * 60+100
+            for j in range(f(i)):
+                y = 30 * j + abs(i - 4) * 15
+                screen.blit(hex, (x, height/2-y))
     screen = pg.display.set_mode((800, 800))
     screen.fill((255, 255, 255))
     width = screen.get_width()
@@ -28,7 +51,7 @@ def main():
                 else:
                     if width - 190 <= mouse[0] <= width - 10 and 20 <= mouse[1] <= 100:
                         playing = False
-                        screen.fill((255,255,255))
+                        screen.fill((255, 255, 255))
         mouse = pg.mouse.get_pos()
         if not playing:
             header = smallfont.render('Hexagon', True, (0, 0, 0))
@@ -50,8 +73,10 @@ def main():
                 pg.draw.rect(screen, (0, 0, 255), [width - 190, 20, 180, 80])
             else:
                 pg.draw.rect(screen, (255, 255, 0), [width - 190, 20, 180, 80])
-            back_text = smallfont2.render('Main menu',True,(0,0,0))
-            screen.blit(back_text, (width - 210+back_text.get_width()/2, 45))
+            back_text = smallfont2.render('Main menu', True, (0, 0, 0))
+            screen.blit(back_text, (width - 210 + back_text.get_width() / 2, 45))
+            # draw_regular_polygon(screen, (0, 0, 0), 6, 300, (width / 2, height / 2), 1)
+            displayhexagon()
         clock.tick(FPS)
         pg.display.update()
 
