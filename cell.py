@@ -1,4 +1,6 @@
 import pygame as pg
+import main_window
+
 class Cell():
     def __init__(self):
         self.pic = pg.image.load('im1.png')
@@ -10,7 +12,8 @@ class Cell():
         pos = pg.mouse.get_pos()
         self.rect.topleft = (self.x, self.y)
         if self.rect.collidepoint(pos):
-            if pg.mouse.get_pressed(3)[0] == 1:
-                print("Clicked on cell",self.address)
+            if pg.mouse.get_pressed(3)[0] == 1 and not main_window.something_clicked:
+                main_window.something_clicked = True
+                print("Clicked on cell", self.address)
             if pg.mouse.get_pressed(3)[0] == 0:
-                something_clicked = False
+                main_window.something_clicked = False

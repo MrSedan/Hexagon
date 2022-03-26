@@ -13,6 +13,8 @@ smallfont2 = pg.font.Font("./fonts/Montserrat-Regular.ttf", 20)
 SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
 something_clicked = False
 listCells = []
+listGreenCells = [(0,0),(4,8),(8,0)]
+listRedCells = [(0,4),(4,0),(8,4)]
 
 def f(i):
     if i < 5:
@@ -21,6 +23,8 @@ def f(i):
         return 13 - i
 
 def start():
+    global something_clicked
+    global listGreenCells
     clock = pg.time.Clock()
     playing = False
     SCREEN.fill((255,255,255))
@@ -30,9 +34,13 @@ def start():
             for j in range(f(i)):
                 y = 30 * j + abs(i - 4) * 15
                 cell = Cell()
-                SCREEN.blit(cell.pic, (x, HEIGHT / 2 - y))
-                cell.x = x
-                cell.y = HEIGHT / 2 - y
+                SCREEN.blit(cell.pic, (x+10*i, HEIGHT / 2 - y-10*j))
+                green_f = pg.image.load("green_f.png")
+                red_f = pg.image.load("red_f.png")
+                if (i,j) in listGreenCells: SCREEN.blit(green_f,(x+10*i+20, HEIGHT / 2 - y-10*j+10))
+                if (i, j) in listRedCells: SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
+                cell.x = x+10*i
+                cell.y = HEIGHT / 2 - y - 10*j
                 cell.address = (i,j)
                 listCells.append(cell)
                 cell.on_click_listener()
@@ -43,17 +51,17 @@ def start():
             if i.type == MOUSEBUTTONDOWN:
                 if not playing:
                     if WIDTH / 2 - 70 <= mouse[0] <= WIDTH / 2 + 70 and HEIGHT - 200 <= mouse[1] <= HEIGHT - 160:
+                        something_clicked = True
                         return
                     if WIDTH / 2 - 90 <= mouse[0] <= WIDTH / 2 + 90 and HEIGHT - 400 <= mouse[1] <= HEIGHT - 320:
+                        something_clicked = True
                         playing = True
                         SCREEN.fill((255, 255, 255))
                 else:
                     if WIDTH - 190 <= mouse[0] <= WIDTH - 10 and 20 <= mouse[1] <= 100:
+                        something_clicked = True
                         playing = False
                         SCREEN.fill((255, 255, 255))
-                    for cell in listCells:
-                        if cell.pic.get_rect().collidepoint(mouse[0],mouse[1]):
-                            print("clicked on cell")
         mouse = pg.mouse.get_pos()
         if not playing:
             header = smallfont.render('Hexagon', True, (0, 0, 0))
