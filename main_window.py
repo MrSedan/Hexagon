@@ -22,6 +22,23 @@ def f(i):
     else:
         return 13 - i
 
+def showNearCells(cell: Cell):
+    i,j = cell.address
+    nearestCell = pg.image.load("nearestCell.png")
+    if i<8:
+        ni = i+1
+        nx = ni * 60 + 100+10*ni
+        ny = 30 * j + abs(ni - 4) * 15
+        if ni<4: ny = HEIGHT / 2 - ny-10*j
+        else:
+            pass
+        SCREEN.blit(nearestCell, (nx,ny))
+        if j<8:
+            nj = j+1
+            ny = 30 * nj + abs(ni - 4) * 15
+            ny = HEIGHT / 2 - ny - 10 * nj
+            SCREEN.blit(nearestCell, (nx, ny))
+
 def start():
     global something_clicked
     global listGreenCells
@@ -37,8 +54,10 @@ def start():
                 SCREEN.blit(cell.pic, (x+10*i, HEIGHT / 2 - y-10*j))
                 green_f = pg.image.load("green_f.png")
                 red_f = pg.image.load("red_f.png")
+                nearestCell = pg.image.load("nearestCell.png")
                 if (i,j) in listGreenCells: SCREEN.blit(green_f,(x+10*i+20, HEIGHT / 2 - y-10*j+10))
                 if (i, j) in listRedCells: SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
+                #if (i+1,j) == (1,0): SCREEN.blit(nearestCell, (x+60+10*(i+1), HEIGHT / 2 - y-10*j+15))
                 cell.x = x+10*i
                 cell.y = HEIGHT / 2 - y - 10*j
                 cell.address = (i,j)

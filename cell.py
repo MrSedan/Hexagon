@@ -14,6 +14,9 @@ class Cell():
         if self.rect.collidepoint(pos):
             if pg.mouse.get_pressed(3)[0] == 1 and not main_window.something_clicked:
                 main_window.something_clicked = True
+                if self.address in main_window.listRedCells or self.address in main_window.listGreenCells:
+                    print("Clicked on cell with chip")
+                    main_window.showNearCells(self)
                 print("Clicked on cell", self.address)
             if pg.mouse.get_pressed(3)[0] == 0:
                 main_window.something_clicked = False
