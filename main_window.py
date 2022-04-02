@@ -189,6 +189,7 @@ def checkNearCellsForAnotherChips(cell: Cell):
 
 def displayhexagon():
     global listCells
+    listCells = []
     for i in range(9):
         x = i * 60 + 100
         for j in range(f(i)):
@@ -215,8 +216,6 @@ def start():
     playing = False
     SCREEN.fill((255,255,255))
     while 1:
-        for i in listCells:
-            i.on_click_listener()
         for i in pg.event.get():
             if i.type == pg.QUIT:
                 return
@@ -253,6 +252,8 @@ def start():
             play_text = smallfont.render('Play', True, (0, 0, 0))
             SCREEN.blit(play_text, (WIDTH / 2 - play_text.get_width() / 2, HEIGHT - 380))
         else:
+            for i in listCells:
+                i.on_click_listener()
             if len(listRedCells) > len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58 or len(listGreenCells)==0:
                 winText = smallfont2.render('Red win!', True, (0, 0, 0))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
@@ -265,6 +266,8 @@ def start():
             else:
                 winText = smallfont2.render('Playing', True, (0, 0, 0))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
+                move = smallfont2.render(f'{"Red" if redMove else "Green"} turn', True, (255,0,0) if redMove else (0,255,0))
+                SCREEN.blit(move, (WIDTH/2-move.get_width()/2, 30))
 
             if WIDTH - 190 <= mouse[0] <= WIDTH - 10 and 20 <= mouse[1] <= 100:
                 pg.draw.rect(SCREEN, (0, 0, 255), [WIDTH - 190, 20, 180, 80])
@@ -273,6 +276,7 @@ def start():
             green_count = smallfont2.render(f'Green: {len(listGreenCells)}', True, (0,0,0))
             SCREEN.blit(green_count, (WIDTH / 2 - winText.get_width() / 2-150, 15))
             red_count = smallfont2.render(f'Red: {len(listRedCells)}', True, (0, 0, 0))
+
             SCREEN.blit(red_count, (WIDTH / 2 - winText.get_width() / 2-150, 45))
             back_text = smallfont2.render('Main menu', True, (0, 0, 0))
             SCREEN.blit(back_text, (WIDTH - 210 + back_text.get_width() / 2, 45))
