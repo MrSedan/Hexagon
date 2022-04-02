@@ -13,8 +13,10 @@ smallfont2 = pg.font.Font("./fonts/Montserrat-Regular.ttf", 20)
 SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
 something_clicked = False
 listCells = []
+listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4)]
 listGreenCells = [(0,0),(4,8),(8,0)]
 listRedCells = [(0,4),(4,0),(8,4)]
+listNearestCells = set()
 
 def f(i):
     if i < 5:
@@ -22,11 +24,27 @@ def f(i):
     else:
         return 13 - i
 
-def showNearCells(cell: Cell):
-    i,j = cell.address[:]
+def placeNear(i,j):
     nearestCell = pg.image.load("nearestCell.png")
-
-    if i<8:
+    if (i,j) in listCellsAddresses:
+        x = i * 60 + 100
+        y = 30 * j + abs(i - 4) * 15
+        y = HEIGHT / 2 - y - 10 * j
+        SCREEN.blit(nearestCell, (x + 10 * i, y))
+def checkRedCell(i,j):
+    if (i,j) in listCellsAddresses:
+        listNearestCells.add((i,j))
+def showNearCells(cell: Cell):
+    global listNearestCells
+    i,j = cell.address[:]
+    checkRedCell(i+1,j)
+    checkRedCell(i,j+1)
+    checkRedCell(i, j - 1)
+    checkRedCell(i+1,j-1)
+    checkRedCell(i -1 , j - 1)
+    checkRedCell(i - 1, j)
+    print(listNearestCells)
+    """if i<8:
         ni = i+1
         nj = j
         if i>3 and j>0:
@@ -75,8 +93,26 @@ def showNearCells(cell: Cell):
         x = ni * 60 + 100
         y = 30 * nj + abs(ni - 4) * 15
         y = HEIGHT / 2 - y - 10 * nj
-        SCREEN.blit(nearestCell, (x + 10 * ni, y))
+        SCREEN.blit(nearestCell, (x + 10 * ni, y))"""
 
+def displayhexagon():
+    for i in range(9):
+        x = i * 60 + 100
+        for j in range(f(i)):
+            y = 30 * j + abs(i - 4) * 15
+            cell = Cell()
+            green_f = pg.image.load("green_f.png")
+            red_f = pg.image.load("red_f.png")
+            nearestCell = pg.image.load("nearestCell.png")
+            if (i,j) in listGreenCells: SCREEN.blit(green_f,(x+10*i+20, HEIGHT / 2 - y-10*j+10))
+            if (i, j) in listRedCells: SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
+            if (i, j) in listNearestCells: SCREEN.blit(nearestCell, (x+10*i, HEIGHT / 2 - y-10*j))
+            SCREEN.blit(cell.pic, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
+            cell.x = x+10*i
+            cell.y = HEIGHT / 2 - y - 10*j
+            cell.address = (i,j)
+            listCells.append(cell)
+            cell.on_click_listener()
 
 def start():
     global something_clicked
@@ -84,23 +120,9 @@ def start():
     clock = pg.time.Clock()
     playing = False
     SCREEN.fill((255,255,255))
-    def displayhexagon():
-        for i in range(9):
-            x = i * 60 + 100
-            for j in range(f(i)):
-                y = 30 * j + abs(i - 4) * 15
-                cell = Cell()
-                SCREEN.blit(cell.pic, (x+10*i, HEIGHT / 2 - y-10*j))
-                green_f = pg.image.load("green_f.png")
-                red_f = pg.image.load("red_f.png")
-                if (i,j) in listGreenCells: SCREEN.blit(green_f,(x+10*i+20, HEIGHT / 2 - y-10*j+10))
-                if (i, j) in listRedCells: SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
-                cell.x = x+10*i
-                cell.y = HEIGHT / 2 - y - 10*j
-                cell.address = (i,j)
-                listCells.append(cell)
-                cell.on_click_listener()
     while 1:
+        for i in listCells:
+            i.on_click_listener()
         for i in pg.event.get():
             if i.type == pg.QUIT:
                 return
@@ -113,6 +135,7 @@ def start():
                         something_clicked = True
                         playing = True
                         SCREEN.fill((255, 255, 255))
+                        displayhexagon()
                 else:
                     if WIDTH - 190 <= mouse[0] <= WIDTH - 10 and 20 <= mouse[1] <= 100:
                         something_clicked = True
@@ -142,6 +165,6 @@ def start():
             back_text = smallfont2.render('Main menu', True, (0, 0, 0))
             SCREEN.blit(back_text, (WIDTH - 210 + back_text.get_width() / 2, 45))
             # draw_regular_polygon(screen, (0, 0, 0), 6, 300, (width / 2, height / 2), 1)
-            displayhexagon()
+            # displayhexagon()
         clock.tick(FPS)
         pg.display.update()
