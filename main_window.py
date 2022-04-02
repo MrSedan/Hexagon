@@ -46,16 +46,11 @@ def f(i):
     else:
         return 13 - i
 
-def placeNear(i,j):
-    nearestCell = pg.image.load("nearestCell.png")
-    if (i,j) in listCellsAddresses:
-        x = i * 60 + 100
-        y = 30 * j + abs(i - 4) * 15
-        y = HEIGHT / 2 - y - 10 * j
-        SCREEN.blit(nearestCell, (x + 10 * i, y))
+
 def checkRedCell(i,j):
     if (i,j) in listCellsAddresses and not (i,j) in listGreenCells+listRedCells:
         listNearestCells.add((i,j))
+
 def showNearCells(cell: Cell):
     global listNearestCells
     i,j = cell.address[:]
@@ -79,9 +74,57 @@ def checkFarCells(i,j):
     if (i,j) in listCellsAddresses and (i,j) not in listRedCells+listGreenCells+list(listNearestCells):
         listFarCells.add((i,j))
 
+def showFarCells(cell: Cell):
+    global listFarCells
+    i, j = cell.address[:]
+    if i<4:
+        if i==3:
+            checkFarCells(i + 2, j-1)
+            checkFarCells(i + 2, j)
+            checkFarCells(i + 2, j + 1)
+        else:
+            checkFarCells(i+2,j)
+            checkFarCells(i + 2, j+1)
+            checkFarCells(i + 2, j+2)
+    else:
+        checkFarCells(i + 2, j-2)
+        checkFarCells(i + 2, j-1)
+        checkFarCells(i + 2, j)
+
+    if i>4:
+        if i==5:
+            checkFarCells(i - 2, j-1)
+            checkFarCells(i - 2, j)
+
+            checkFarCells(i - 2, j+1)
+        else:
+            checkFarCells(i-2,j)
+            checkFarCells(i - 2, j+1)
+            checkFarCells(i - 2, j+2)
+    else:
+        checkFarCells(i - 2, j-2)
+        checkFarCells(i - 2, j - 1)
+        checkFarCells(i - 2, j)
+
+    checkFarCells(i, j+2)
+    checkFarCells(i, j-2)
+
+    if i>=4:
+        checkFarCells(i + 1, j+1)
+        checkFarCells(i + 1, j-2)
+    else:
+        checkFarCells(i + 1, j + 2)
+        checkFarCells(i + 1, j - 1)
+
+    if i<=4:
+        checkFarCells(i - 1, j + 1)
+        checkFarCells(i - 1, j - 2)
+    else:
+        checkFarCells(i - 1, j + 2)
+        checkFarCells(i - 1, j - 1)
+
 def checkNearCellsForAnotherChips(cell: Cell):
     i, j = cell.address[:]
-    print("aboba")
     if redMove:
         if (i+1,j) in listGreenCells:
             listGreenCells.remove((i+1,j))
@@ -142,70 +185,6 @@ def checkNearCellsForAnotherChips(cell: Cell):
         if (i - 1, j) in listRedCells:
             listRedCells.remove((i -1, j))
             listGreenCells.append((i - 1, j))
-
-def showFarCells(cell: Cell):
-    global listFarCells
-    i, j = cell.address[:]
-    if i<4:
-        if i==3:
-            checkFarCells(i + 2, j-1)
-            checkFarCells(i + 2, j)
-            checkFarCells(i + 2, j + 1)
-        else:
-            checkFarCells(i+2,j)
-            checkFarCells(i + 2, j+1)
-            checkFarCells(i + 2, j+2)
-    else:
-        checkFarCells(i + 2, j-2)
-        checkFarCells(i + 2, j-1)
-        checkFarCells(i + 2, j)
-
-    if i>4:
-        if i==5:
-            checkFarCells(i - 2, j-1)
-            checkFarCells(i - 2, j)
-
-            checkFarCells(i - 2, j+1)
-        else:
-            checkFarCells(i-2,j)
-            checkFarCells(i - 2, j+1)
-            checkFarCells(i - 2, j+2)
-    else:
-        checkFarCells(i - 2, j-2)
-        checkFarCells(i - 2, j - 1)
-        checkFarCells(i - 2, j)
-
-    checkFarCells(i, j+2)
-    checkFarCells(i, j-2)
-
-    if i>=4:
-        checkFarCells(i + 1, j+1)
-        checkFarCells(i + 1, j-2)
-    else:
-        checkFarCells(i + 1, j + 2)
-        checkFarCells(i + 1, j - 1)
-
-    if i<=4:
-        checkFarCells(i - 1, j + 1)
-        checkFarCells(i - 1, j - 2)
-    else:
-        checkFarCells(i - 1, j + 2)
-        checkFarCells(i - 1, j - 1)
-
-    """for e in listNearestCells:
-        i, j = e
-        checkFarCells(i,j+1)
-        checkFarCells(i,j-1)
-        checkFarCells(i-1,j)
-        checkFarCells(i+1, j)
-        if i<=4:
-            checkFarCells(i-1,j-1)
-        else:
-            checkFarCells(i - 1, j + 1)
-        if i>=4:
-            checkFarCells(i+1,j-1)
-        else:
-            checkFarCells(i+1,j+1)"""
 
 
 def displayhexagon():
