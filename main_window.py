@@ -18,6 +18,8 @@ listGreenCells = [(0,0),(4,8),(8,0)]
 listRedCells = [(0,4),(4,0),(8,4)]
 listNearestCells = set()
 listFarCells = set()
+clickedCell = ()
+redMove = True
 
 def f(i):
     if i < 5:
@@ -55,8 +57,7 @@ def showNearCells(cell: Cell):
     checkRedCell(i - 1, j)
 
 def checkFarCells(i,j):
-    if (i,j) in listCellsAddresses and (i,j) not in listRedCells+listGreenCells+list(listNearestCells)\
-            :
+    if (i,j) in listCellsAddresses and (i,j) not in listRedCells+listGreenCells+list(listNearestCells):
         listFarCells.add((i,j))
 
 def showFarCells(cell: Cell):
@@ -78,6 +79,7 @@ def showFarCells(cell: Cell):
 
 
 def displayhexagon():
+    global listCells
     for i in range(9):
         x = i * 60 + 100
         for j in range(f(i)):
