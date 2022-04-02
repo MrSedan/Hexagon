@@ -16,10 +16,11 @@ class Cell():
                 main_window.something_clicked = True
                 print(main_window.listNearestCells)
                 main_window.listNearestCells = set()
+                main_window.listFarCells = set()
                 if self.address in main_window.listRedCells or self.address in main_window.listGreenCells:
                     print("Clicked on cell with chip")
-
-                main_window.showNearCells(self)
+                    main_window.showNearCells(self)
+                    main_window.showFarCells(self)
                 print("Clicked on cell", self.address)
                 main_window.SCREEN.fill((255,255,255))
                 main_window.displayhexagon()

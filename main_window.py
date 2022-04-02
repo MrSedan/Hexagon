@@ -17,6 +17,7 @@ listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1
 listGreenCells = [(0,0),(4,8),(8,0)]
 listRedCells = [(0,4),(4,0),(8,4)]
 listNearestCells = set()
+listFarCells = set()
 
 def f(i):
     if i < 5:
@@ -52,57 +53,29 @@ def showNearCells(cell: Cell):
         checkRedCell(i-1, j+1)
 
     checkRedCell(i - 1, j)
-    print(listNearestCells)
-    """if i<8:
-        ni = i+1
-        nj = j
-        if i>3 and j>0:
-            nj = j-1
-        x = ni * 60 + 100
-        y = 30 * nj + abs(ni - 4) * 15
-        y = HEIGHT / 2 - y-10*nj
-        SCREEN.blit(nearestCell, (x+10*ni,y))
-    if j+1<f(i):
-        ni = i
-        nj = j+1
-        x = ni * 60 + 100
-        y = 30 * nj + abs(ni - 4) * 15
-        y = HEIGHT / 2 - y - 10 * nj
-        SCREEN.blit(nearestCell, (x + 10 * ni, y))
-    if i>0:
-        ni = i - 1
-        nj = j
-        if i<=4 and j>1:
-            nj = j-1
-        x = ni * 60 + 100
-        y = 30 * nj + abs(ni - 4) * 15
-        y = HEIGHT / 2 - y - 10 * nj
-        SCREEN.blit(nearestCell, (x + 10 * ni, y))
-    if j-1>=0:
-        ni = i
-        nj = j - 1
-        x = ni * 60 + 100
-        y = 30 * nj + abs(ni - 4) * 15
-        y = HEIGHT / 2 - y - 10 * nj
-        SCREEN.blit(nearestCell, (x + 10 * ni, y))
-    if j<f(i-1) and i-1>=0:
-        ni = i-1
-        nj=j
-        if i > 4:
-            nj+=1
-        x = ni * 60 + 100
-        y = 30 * nj + abs(ni - 4) * 15
-        y = HEIGHT / 2 - y - 10 * nj
-        SCREEN.blit(nearestCell, (x + 10 * ni, y))
-    if j<f(i+1) and i+1<=8:
-        ni = i+1
-        nj = j
-        if i<4:
-            nj+=1
-        x = ni * 60 + 100
-        y = 30 * nj + abs(ni - 4) * 15
-        y = HEIGHT / 2 - y - 10 * nj
-        SCREEN.blit(nearestCell, (x + 10 * ni, y))"""
+
+def checkFarCells(i,j):
+    if (i,j) in listCellsAddresses and (i,j) not in listRedCells+listGreenCells+list(listNearestCells)\
+            :
+        listFarCells.add((i,j))
+
+def showFarCells(cell: Cell):
+    global listFarCells
+    for e in listNearestCells:
+        i, j = e
+        checkFarCells(i,j+1)
+        checkFarCells(i,j-1)
+        checkFarCells(i-1,j)
+        checkFarCells(i+1, j)
+        if i<=4:
+            checkFarCells(i-1,j-1)
+        else:
+            checkFarCells(i - 1, j + 1)
+        if i>=4:
+            checkFarCells(i+1,j-1)
+        else:
+            checkFarCells(i+1,j+1)
+
 
 def displayhexagon():
     for i in range(9):
@@ -113,9 +86,11 @@ def displayhexagon():
             green_f = pg.image.load("green_f.png")
             red_f = pg.image.load("red_f.png")
             nearestCell = pg.image.load("nearestCell.png")
+            farCell = pg.image.load("farCell.png")
             if (i,j) in listGreenCells: SCREEN.blit(green_f,(x+10*i+20, HEIGHT / 2 - y-10*j+10))
             if (i, j) in listRedCells: SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
             if (i, j) in listNearestCells: SCREEN.blit(nearestCell, (x+10*i, HEIGHT / 2 - y-10*j))
+            if (i, j) in listFarCells: SCREEN.blit(farCell, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
             SCREEN.blit(cell.pic, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
             cell.x = x+10*i
             cell.y = HEIGHT / 2 - y - 10*j
