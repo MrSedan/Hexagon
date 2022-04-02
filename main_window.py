@@ -32,7 +32,7 @@ def placeNear(i,j):
         y = HEIGHT / 2 - y - 10 * j
         SCREEN.blit(nearestCell, (x + 10 * i, y))
 def checkRedCell(i,j):
-    if (i,j) in listCellsAddresses:
+    if (i,j) in listCellsAddresses and not (i,j) in listGreenCells+listRedCells:
         listNearestCells.add((i,j))
 def showNearCells(cell: Cell):
     global listNearestCells
@@ -40,8 +40,17 @@ def showNearCells(cell: Cell):
     checkRedCell(i+1,j)
     checkRedCell(i,j+1)
     checkRedCell(i, j - 1)
-    checkRedCell(i+1,j-1)
-    checkRedCell(i -1 , j - 1)
+
+    if i>=4:
+        checkRedCell(i+1,j-1)
+    elif i<4:
+        checkRedCell(i + 1, j+1)
+
+    if i<=4:
+        checkRedCell(i -1 , j - 1)
+    else:
+        checkRedCell(i-1, j+1)
+
     checkRedCell(i - 1, j)
     print(listNearestCells)
     """if i<8:
@@ -116,7 +125,6 @@ def displayhexagon():
 
 def start():
     global something_clicked
-    global listGreenCells
     clock = pg.time.Clock()
     playing = False
     SCREEN.fill((255,255,255))
