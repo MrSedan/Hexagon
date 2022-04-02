@@ -13,13 +13,32 @@ smallfont2 = pg.font.Font("./fonts/Montserrat-Regular.ttf", 20)
 SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
 something_clicked = False
 listCells = []
-listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6), (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6), (4, 7), (4, 8), (5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4)]
+listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 4), (3, 5), (3, 6), (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 6), (4, 7), (4, 8), (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4)]
 listGreenCells = [(0,0),(4,8),(8,0)]
 listRedCells = [(0,4),(4,0),(8,4)]
 listNearestCells = set()
 listFarCells = set()
 clickedCell = ()
 redMove = True
+win = False
+
+def initialize():
+    global something_clicked, listCells, listCellsAddresses, listGreenCells, listRedCells, listNearestCells,listFarCells, clickedCell, redMove
+    something_clicked = False
+    listCells = []
+    listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5),
+                          (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 4),
+                          (3, 5), (3, 6), (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 6), (4, 7), (4, 8),
+                          (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3),
+                          (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1),
+                          (8, 2), (8, 3), (8, 4)]
+    listGreenCells = [(0, 0), (4, 8), (8, 0)]
+    listRedCells = [(0, 4), (4, 0), (8, 4)]
+    listNearestCells = set()
+    listFarCells = set()
+    clickedCell = ()
+    redMove = True
+    win = False
 
 def f(i):
     if i < 5:
@@ -60,9 +79,120 @@ def checkFarCells(i,j):
     if (i,j) in listCellsAddresses and (i,j) not in listRedCells+listGreenCells+list(listNearestCells):
         listFarCells.add((i,j))
 
+def checkNearCellsForAnotherChips(cell: Cell):
+    i, j = cell.address[:]
+    print("aboba")
+    if redMove:
+        if (i+1,j) in listGreenCells:
+            listGreenCells.remove((i+1,j))
+            listRedCells.append((i+1,j))
+        if (i,j+1) in listGreenCells:
+            listGreenCells.remove((i, j+1))
+            listRedCells.append((i, j+1))
+        if (i,j-1) in listGreenCells:
+            listGreenCells.remove((i, j-1))
+            listRedCells.append((i, j-1))
+        if i >= 4:
+            if (i + 1, j - 1) in listGreenCells:
+                listGreenCells.remove((i + 1, j-1))
+                listRedCells.append((i + 1, j-1))
+        elif i < 4:
+            if (i + 1, j + 1) in listGreenCells:
+                listGreenCells.remove((i + 1, j+1))
+                listRedCells.append((i + 1, j+1))
+        if i <= 4:
+            if (i - 1, j - 1) in listGreenCells:
+                listGreenCells.remove((i -1, j-1))
+                listRedCells.append((i -1, j-1))
+        else:
+            if (i - 1, j + 1) in listGreenCells:
+                listGreenCells.remove((i -1, j+1))
+                listRedCells.append((i - 1, j+1))
+
+        if (i - 1, j) in listGreenCells:
+            listGreenCells.remove((i -1, j))
+            listRedCells.append((i - 1, j))
+    else:
+        if (i+1,j) in listRedCells:
+            listRedCells.remove((i+1,j))
+            listGreenCells.append((i+1,j))
+        if (i,j+1) in listRedCells:
+            listRedCells.remove((i, j+1))
+            listGreenCells.append((i, j+1))
+        if (i,j-1) in listRedCells:
+            listRedCells.remove((i, j-1))
+            listGreenCells.append((i, j-1))
+        if i >= 4:
+            if (i + 1, j - 1) in listRedCells:
+                listRedCells.remove((i + 1, j-1))
+                listGreenCells.append((i + 1, j-1))
+        elif i < 4:
+            if (i + 1, j + 1) in listRedCells:
+                listRedCells.remove((i + 1, j+1))
+                listGreenCells.append((i + 1, j+1))
+        if i <= 4:
+            if (i - 1, j - 1) in listRedCells:
+                listRedCells.remove((i -1, j-1))
+                listGreenCells.append((i -1, j-1))
+        else:
+            if (i - 1, j + 1) in listRedCells:
+                listRedCells.remove((i -1, j+1))
+                listGreenCells.append((i - 1, j+1))
+
+        if (i - 1, j) in listRedCells:
+            listRedCells.remove((i -1, j))
+            listGreenCells.append((i - 1, j))
+
 def showFarCells(cell: Cell):
     global listFarCells
-    for e in listNearestCells:
+    i, j = cell.address[:]
+    if i<4:
+        if i==3:
+            checkFarCells(i + 2, j-1)
+            checkFarCells(i + 2, j)
+            checkFarCells(i + 2, j + 1)
+        else:
+            checkFarCells(i+2,j)
+            checkFarCells(i + 2, j+1)
+            checkFarCells(i + 2, j+2)
+    else:
+        checkFarCells(i + 2, j-2)
+        checkFarCells(i + 2, j-1)
+        checkFarCells(i + 2, j)
+
+    if i>4:
+        if i==5:
+            checkFarCells(i - 2, j-1)
+            checkFarCells(i - 2, j)
+
+            checkFarCells(i - 2, j+1)
+        else:
+            checkFarCells(i-2,j)
+            checkFarCells(i - 2, j+1)
+            checkFarCells(i - 2, j+2)
+    else:
+        checkFarCells(i - 2, j-2)
+        checkFarCells(i - 2, j - 1)
+        checkFarCells(i - 2, j)
+
+    checkFarCells(i, j+2)
+    checkFarCells(i, j-2)
+
+    if i>=4:
+        checkFarCells(i + 1, j+1)
+        checkFarCells(i + 1, j-2)
+    else:
+        checkFarCells(i + 1, j + 2)
+        checkFarCells(i + 1, j - 1)
+
+    if i<=4:
+        checkFarCells(i - 1, j + 1)
+        checkFarCells(i - 1, j - 2)
+    else:
+        checkFarCells(i - 1, j + 2)
+        checkFarCells(i - 1, j - 1)
+
+    """for e in listNearestCells:
         i, j = e
         checkFarCells(i,j+1)
         checkFarCells(i,j-1)
@@ -75,7 +205,7 @@ def showFarCells(cell: Cell):
         if i>=4:
             checkFarCells(i+1,j-1)
         else:
-            checkFarCells(i+1,j+1)
+            checkFarCells(i+1,j+1)"""
 
 
 def displayhexagon():
@@ -93,7 +223,7 @@ def displayhexagon():
             if (i, j) in listRedCells: SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
             if (i, j) in listNearestCells: SCREEN.blit(nearestCell, (x+10*i, HEIGHT / 2 - y-10*j))
             if (i, j) in listFarCells: SCREEN.blit(farCell, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
-            SCREEN.blit(cell.pic, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
+            if (i,j) in listCellsAddresses: SCREEN.blit(cell.pic, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
             cell.x = x+10*i
             cell.y = HEIGHT / 2 - y - 10*j
             cell.address = (i,j)
@@ -120,6 +250,7 @@ def start():
                         something_clicked = True
                         playing = True
                         SCREEN.fill((255, 255, 255))
+                        initialize()
                         displayhexagon()
                 else:
                     if WIDTH - 190 <= mouse[0] <= WIDTH - 10 and 20 <= mouse[1] <= 100:
@@ -143,10 +274,27 @@ def start():
             play_text = smallfont.render('Play', True, (0, 0, 0))
             SCREEN.blit(play_text, (WIDTH / 2 - play_text.get_width() / 2, HEIGHT - 380))
         else:
+            if len(listRedCells) > len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58 or len(listGreenCells)==0:
+                winText = smallfont2.render('Red win!', True, (0, 0, 0))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
+            elif len(listRedCells) == len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58:
+                winText = smallfont2.render('Draw!', True, (0, 0, 0))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
+            elif len(listRedCells) < len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58 or len(listRedCells)==0:
+                winText = smallfont2.render('Green win!', True, (0, 0, 0))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 25))
+            else:
+                winText = smallfont2.render('Playing', True, (0, 0, 0))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
+
             if WIDTH - 190 <= mouse[0] <= WIDTH - 10 and 20 <= mouse[1] <= 100:
                 pg.draw.rect(SCREEN, (0, 0, 255), [WIDTH - 190, 20, 180, 80])
             else:
                 pg.draw.rect(SCREEN, (255, 255, 0), [WIDTH - 190, 20, 180, 80])
+            green_count = smallfont2.render(f'Green: {len(listGreenCells)}', True, (0,0,0))
+            SCREEN.blit(green_count, (WIDTH / 2 - winText.get_width() / 2-150, 15))
+            red_count = smallfont2.render(f'Red: {len(listRedCells)}', True, (0, 0, 0))
+            SCREEN.blit(red_count, (WIDTH / 2 - winText.get_width() / 2-150, 45))
             back_text = smallfont2.render('Main menu', True, (0, 0, 0))
             SCREEN.blit(back_text, (WIDTH - 210 + back_text.get_width() / 2, 45))
             # draw_regular_polygon(screen, (0, 0, 0), 6, 300, (width / 2, height / 2), 1)

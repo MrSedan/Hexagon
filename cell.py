@@ -17,9 +17,11 @@ class Cell():
                 if self.address in main_window.listNearestCells:
                     if main_window.clickedCell in main_window.listRedCells and main_window.redMove:
                         main_window.listRedCells.append(self.address)
+                        main_window.checkNearCellsForAnotherChips(self)
                         main_window.redMove = False
                     elif not main_window.redMove:
                         main_window.listGreenCells.append(self.address)
+                        main_window.checkNearCellsForAnotherChips(self)
                         main_window.redMove = True
                     main_window.listNearestCells = set()
                     main_window.listFarCells = set()
@@ -31,10 +33,12 @@ class Cell():
                     if main_window.clickedCell in main_window.listRedCells and main_window.redMove:
                         main_window.listRedCells.append(self.address)
                         main_window.listRedCells.remove(main_window.clickedCell)
+                        main_window.checkNearCellsForAnotherChips(self)
                         main_window.redMove = False
                     elif not main_window.redMove:
                         main_window.listGreenCells.append(self.address)
                         main_window.listGreenCells.remove(main_window.clickedCell)
+                        main_window.checkNearCellsForAnotherChips(self)
                         main_window.redMove = True
                     main_window.listNearestCells = set()
                     main_window.listFarCells = set()
