@@ -243,14 +243,14 @@ def start():
                 pg.draw.rect(SCREEN, (0, 0, 255), [WIDTH / 2 - 70, WIDTH - 200, 140, 40])
             else:
                 pg.draw.rect(SCREEN, (255, 255, 0), [WIDTH / 2 - 70, HEIGHT - 200, 140, 40])
-            if WIDTH / 2 - 90 <= mouse[0] <= WIDTH / 2 + 90 and HEIGHT - 400 <= mouse[1] <= HEIGHT - 320:
-                pg.draw.rect(SCREEN, (0, 0, 255), [WIDTH / 2 - 90, HEIGHT - 400, 180, 80])
+            if WIDTH / 2 - 90 <= mouse[0] <= WIDTH / 2 + 90 and HEIGHT - 360 <= mouse[1] <= HEIGHT - 280:
+                pg.draw.rect(SCREEN, (0, 0, 255), [WIDTH / 2 - 90, HEIGHT - 360, 180, 80])
             else:
-                pg.draw.rect(SCREEN, (255, 255, 0), [WIDTH / 2 - 90, HEIGHT - 400, 180, 80])
+                pg.draw.rect(SCREEN, (255, 255, 0), [WIDTH / 2 - 90, HEIGHT - 360, 180, 80])
             quit_text = smallfont.render('Quit', True, (0, 0, 0))
             SCREEN.blit(quit_text, (WIDTH / 2 - quit_text.get_width() / 2, HEIGHT - 200))
             play_text = smallfont.render('Play', True, (0, 0, 0))
-            SCREEN.blit(play_text, (WIDTH / 2 - play_text.get_width() / 2, HEIGHT - 380))
+            SCREEN.blit(play_text, (WIDTH / 2 - play_text.get_width() / 2, HEIGHT - 340))
         else:
             for i in listCells:
                 i.on_click_listener()
