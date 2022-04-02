@@ -224,7 +224,7 @@ def start():
                     if WIDTH / 2 - 70 <= mouse[0] <= WIDTH / 2 + 70 and HEIGHT - 200 <= mouse[1] <= HEIGHT - 160:
                         something_clicked = True
                         return
-                    if WIDTH / 2 - 90 <= mouse[0] <= WIDTH / 2 + 90 and HEIGHT - 400 <= mouse[1] <= HEIGHT - 320:
+                    if WIDTH / 2 - 90 <= mouse[0] <= WIDTH / 2 + 90 and HEIGHT - 360 <= mouse[1] <= HEIGHT - 280:
                         something_clicked = True
                         playing = True
                         SCREEN.fill((255, 255, 255))
