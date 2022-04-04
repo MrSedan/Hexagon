@@ -14,10 +14,10 @@ SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
 something_clicked = False
 listCells = []
 listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 4), (3, 5), (3, 6), (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 6), (4, 7), (4, 8), (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4)]
-listRedCells = {(3,0),(4,0),(5,0)}
-listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
-# listGreenCells = [(0,0),(4,8),(8,0)]
-# listRedCells = [(0,4),(4,0),(8,4)]
+# listRedCells = {(3,0),(4,0),(5,0)}
+# listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
+listGreenCells = {(0,0),(4,8),(8,0)}
+listRedCells = {(0,4),(4,0),(8,4)}
 listNearestCells = set()
 listFarCells = set()
 clickedCell = ()
@@ -36,10 +36,10 @@ def initialize():
                           (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3),
                           (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1),
                           (8, 2), (8, 3), (8, 4)]
-    # listGreenCells = [(0, 0), (4, 8), (8, 0)]
-    # listRedCells = [(0, 4), (4, 0), (8, 4)]
-    listRedCells = {(3, 0), (4, 0), (5, 0)}
-    listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
+    listGreenCells = {(0, 0), (4, 8), (8, 0)}
+    listRedCells = {(0, 4), (4, 0), (8, 4)}
+    # listRedCells = {(3, 0), (4, 0), (5, 0)}
+    # listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
     listNearestCells = set()
     listFarCells = set()
     clickedCell = ()
@@ -136,63 +136,63 @@ def checkNearCellsForAnotherChips(cell: Cell):
     if redMove:
         if (i+1,j) in listGreenCells:
             listGreenCells.remove((i+1,j))
-            listRedCells.append((i+1,j))
+            listRedCells.add((i+1,j))
         if (i,j+1) in listGreenCells:
             listGreenCells.remove((i, j+1))
-            listRedCells.append((i, j+1))
+            listRedCells.add((i, j+1))
         if (i,j-1) in listGreenCells:
             listGreenCells.remove((i, j-1))
-            listRedCells.append((i, j-1))
+            listRedCells.add((i, j-1))
         if i >= 4:
             if (i + 1, j - 1) in listGreenCells:
                 listGreenCells.remove((i + 1, j-1))
-                listRedCells.append((i + 1, j-1))
+                listRedCells.add((i + 1, j-1))
         elif i < 4:
             if (i + 1, j + 1) in listGreenCells:
                 listGreenCells.remove((i + 1, j+1))
-                listRedCells.append((i + 1, j+1))
+                listRedCells.add((i + 1, j+1))
         if i <= 4:
             if (i - 1, j - 1) in listGreenCells:
                 listGreenCells.remove((i -1, j-1))
-                listRedCells.append((i -1, j-1))
+                listRedCells.add((i -1, j-1))
         else:
             if (i - 1, j + 1) in listGreenCells:
                 listGreenCells.remove((i -1, j+1))
-                listRedCells.append((i - 1, j+1))
+                listRedCells.add((i - 1, j+1))
 
         if (i - 1, j) in listGreenCells:
             listGreenCells.remove((i -1, j))
-            listRedCells.append((i - 1, j))
+            listRedCells.add((i - 1, j))
     else:
         if (i+1,j) in listRedCells:
             listRedCells.remove((i+1,j))
-            listGreenCells.append((i+1,j))
+            listGreenCells.add((i+1,j))
         if (i,j+1) in listRedCells:
             listRedCells.remove((i, j+1))
-            listGreenCells.append((i, j+1))
+            listGreenCells.add((i, j+1))
         if (i,j-1) in listRedCells:
             listRedCells.remove((i, j-1))
-            listGreenCells.append((i, j-1))
+            listGreenCells.add((i, j-1))
         if i >= 4:
             if (i + 1, j - 1) in listRedCells:
                 listRedCells.remove((i + 1, j-1))
-                listGreenCells.append((i + 1, j-1))
+                listGreenCells.add((i + 1, j-1))
         elif i < 4:
             if (i + 1, j + 1) in listRedCells:
                 listRedCells.remove((i + 1, j+1))
-                listGreenCells.append((i + 1, j+1))
+                listGreenCells.add((i + 1, j+1))
         if i <= 4:
             if (i - 1, j - 1) in listRedCells:
                 listRedCells.remove((i -1, j-1))
-                listGreenCells.append((i -1, j-1))
+                listGreenCells.add((i -1, j-1))
         else:
             if (i - 1, j + 1) in listRedCells:
                 listRedCells.remove((i -1, j+1))
-                listGreenCells.append((i - 1, j+1))
+                listGreenCells.add((i - 1, j+1))
 
         if (i - 1, j) in listRedCells:
             listRedCells.remove((i -1, j))
-            listGreenCells.append((i - 1, j))
+            listGreenCells.add((i - 1, j))
 
 #Мне самому страшно, что я написал, но оно работает...
 def checkCellForMove(cell: Cell):
