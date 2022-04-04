@@ -14,16 +14,20 @@ SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
 something_clicked = False
 listCells = []
 listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (2, 2), (2, 3), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 2), (3, 4), (3, 5), (3, 6), (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 6), (4, 7), (4, 8), (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4)]
-listGreenCells = [(0,0),(4,8),(8,0)]
-listRedCells = [(0,4),(4,0),(8,4)]
+listRedCells = {(3,0),(4,0),(5,0)}
+listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
+# listGreenCells = [(0,0),(4,8),(8,0)]
+# listRedCells = [(0,4),(4,0),(8,4)]
 listNearestCells = set()
 listFarCells = set()
 clickedCell = ()
+redMoveCount = 0
+greenMoveCount = 0
 redMove = True
 win = False
 
 def initialize():
-    global something_clicked, listCells, listCellsAddresses, listGreenCells, listRedCells, listNearestCells,listFarCells, clickedCell, redMove
+    global something_clicked, listCells, listCellsAddresses, listGreenCells, listRedCells, listNearestCells,listFarCells, clickedCell, redMove, win, redMoveCount, greenMoveCount
     something_clicked = False
     listCells = []
     listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5),
@@ -32,13 +36,17 @@ def initialize():
                           (5, 0), (5, 1), (5, 2), (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3),
                           (6, 4), (6, 5), (6, 6), (7, 0), (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1),
                           (8, 2), (8, 3), (8, 4)]
-    listGreenCells = [(0, 0), (4, 8), (8, 0)]
-    listRedCells = [(0, 4), (4, 0), (8, 4)]
+    # listGreenCells = [(0, 0), (4, 8), (8, 0)]
+    # listRedCells = [(0, 4), (4, 0), (8, 4)]
+    listRedCells = {(3, 0), (4, 0), (5, 0)}
+    listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
     listNearestCells = set()
     listFarCells = set()
     clickedCell = ()
     redMove = True
     win = False
+    redMoveCount = 0
+    greenMoveCount = 0
 
 def f(i):
     if i < 5:
@@ -48,7 +56,7 @@ def f(i):
 
 
 def checkRedCell(i,j):
-    if (i,j) in listCellsAddresses and not (i,j) in listGreenCells+listRedCells:
+    if (i,j) in listCellsAddresses and not (i,j) in listGreenCells|listRedCells:
         listNearestCells.add((i,j))
 
 def showNearCells(cell: Cell):
@@ -71,7 +79,7 @@ def showNearCells(cell: Cell):
     checkRedCell(i - 1, j)
 
 def checkFarCells(i,j):
-    if (i,j) in listCellsAddresses and (i,j) not in listRedCells+listGreenCells+list(listNearestCells):
+    if (i,j) in listCellsAddresses and (i,j) not in listRedCells|listGreenCells|listNearestCells:
         listFarCells.add((i,j))
 
 def showFarCells(cell: Cell):
@@ -186,29 +194,92 @@ def checkNearCellsForAnotherChips(cell: Cell):
             listRedCells.remove((i -1, j))
             listGreenCells.append((i - 1, j))
 
+#Мне самому страшно, что я написал, но оно работает...
+def checkCellForMove(cell: Cell):
+    i, j = cell.address[:]
+    t = 0
+    if i<4:
+        if i==3:
+            if (i+2,j-1) in listCellsAddresses and (i+2,j-1) not in listRedCells|listGreenCells: t+=1
+            if (i+2,j)in listCellsAddresses and (i+2,j) not in listRedCells | listGreenCells: t += 1
+            if (i+2,j+1) in listCellsAddresses and (i+2,j+1) not in listRedCells | listGreenCells: t += 1
+            # t+=len({(i+2,j-1),(i+2,j),(i+2,j+1)} & (listRedCells|listGreenCells))
+        else:
+            if (i+2,j) in listCellsAddresses and (i+2,j) not in listRedCells | listGreenCells: t += 1
+            if (i+2,j+1) in listCellsAddresses and (i+2,j+1) not in listRedCells | listGreenCells: t += 1
+            if (i+2,j+2) in listCellsAddresses and (i+2,j+2) not in listRedCells | listGreenCells: t += 1
+            # t+=len({(i+2,j),(i+2,j+1),(i+2,j+2)} & (listRedCells|listGreenCells))
+    else:
+        if (i+2,j-2) in listCellsAddresses and (i+2,j-2) not in listRedCells | listGreenCells: t += 1
+        if (i+2,j-1) in listCellsAddresses and (i+2,j-1) not in listRedCells | listGreenCells: t += 1
+        if (i+2,j) in listCellsAddresses and (i+2,j) not in listRedCells | listGreenCells: t += 1
+        # t+= len({(i+2,j-2),(i+2,j-1),(i+2,j)} & (listRedCells|listGreenCells))
+    if i>4:
+        if i==5:
+            if (i-2,j-1) in listCellsAddresses and (i-2,j-1) not in listRedCells | listGreenCells: t += 1
+            if (i-2,j) in listCellsAddresses and (i-2,j) not in listRedCells | listGreenCells: t += 1
+            if (i-2,j+1) in listCellsAddresses and (i-2,j+1) not in listRedCells | listGreenCells: t += 1
+            # t+=len({(i-2,j-1),(i-2,j),(i-2,j+1)} & (listRedCells|listGreenCells))
+        else:
+            if (i-2,j) in listCellsAddresses and (i-2,j) not in listRedCells | listGreenCells: t += 1
+            if (i-2,j+1) in listCellsAddresses and (i-2,j+1) not in listRedCells | listGreenCells: t += 1
+            if (i-2,j+2) in listCellsAddresses and (i-2,j+2) not in listRedCells | listGreenCells: t += 1
+            # t+=len({(i-2,j),(i-2,j+1),(i-2,j+2)} & (listRedCells|listGreenCells))
+    else:
+        if (i-2,j) in listCellsAddresses and (i-2,j) not in listRedCells | listGreenCells: t += 1
+        if (i-2,j-1) in listCellsAddresses and (i-2,j-1) not in listRedCells | listGreenCells: t += 1
+        if (i-2,j-2) in listCellsAddresses and (i-2,j-2) not in listRedCells | listGreenCells: t += 1
+        # t+=len({(i-2,j),(i-2,j+1),(i-2,j+2)} & (listGreenCells|listRedCells))
+    if (i,j+2) in listCellsAddresses and (i,j+2) not in listRedCells | listGreenCells: t += 1
+    if (i,j-2) in listCellsAddresses and (i,j-2) not in listRedCells | listGreenCells: t += 1
+    # t+= len({(i,j+2),(i,j-2)} & (listRedCells|listGreenCells))
+
+    if i>=4:
+        if (i+1,j+1) in listCellsAddresses and (i+1,j+1) not in listRedCells | listGreenCells: t += 1
+        if (i+1,j-2) in listCellsAddresses and (i+1,j-2) not in listRedCells | listGreenCells: t += 1
+        # t+= len({(i+1,j+1),(i+1,j-2)} & (listGreenCells|listRedCells))
+    else:
+        if (i+1,j+2) in listCellsAddresses and (i+1,j+2) not in listRedCells | listGreenCells: t += 1
+        if (i+1,j-1) in listCellsAddresses and (i+1,j-1) not in listRedCells | listGreenCells: t += 1
+        # t+=len({(i+1,j+2), (i+1,j-1)} & (listGreenCells|listRedCells))
+    if i<=4:
+        if (i-1,j+1) in listCellsAddresses and (i-1,j+1) not in listRedCells | listGreenCells: t += 1
+        if (i-1,j-2) in listCellsAddresses and (i-1,j-2) not in listRedCells | listGreenCells: t += 1
+        # t+= len({(i-1,j+1),(i-1,j-2)} & (listGreenCells|listRedCells))
+    else:
+        if (i-1,j+2) in listCellsAddresses and (i-1,j+2) not in listRedCells | listGreenCells: t += 1
+        if (i-1,j-1) in listCellsAddresses and (i-1,j-1) not in listRedCells | listGreenCells: t += 1
+        # t+=len({(i-1,j+2),(i-1,j-1)} & (listGreenCells|listRedCells))
+    return t
 
 def displayhexagon():
-    global listCells
+    global listCells, greenMoveCount, redMoveCount
     listCells = []
     for i in range(9):
         x = i * 60 + 100
         for j in range(f(i)):
             y = 30 * j + abs(i - 4) * 15
             cell = Cell()
+            cell.address = (i, j)
             green_f = pg.image.load("green_f.png")
             red_f = pg.image.load("red_f.png")
             nearestCell = pg.image.load("nearestCell.png")
             farCell = pg.image.load("farCell.png")
-            if (i,j) in listGreenCells: SCREEN.blit(green_f,(x+10*i+20, HEIGHT / 2 - y-10*j+10))
-            if (i, j) in listRedCells: SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
+            if (i,j) in listGreenCells:
+                SCREEN.blit(green_f,(x+10*i+20, HEIGHT / 2 - y-10*j+10))
+                greenMoveCount+=checkCellForMove(cell)
+            if (i, j) in listRedCells:
+                SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
+                redMoveCount+=checkCellForMove(cell)
             if (i, j) in listNearestCells: SCREEN.blit(nearestCell, (x+10*i, HEIGHT / 2 - y-10*j))
             if (i, j) in listFarCells: SCREEN.blit(farCell, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
             if (i,j) in listCellsAddresses: SCREEN.blit(cell.pic, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
             cell.x = x+10*i
             cell.y = HEIGHT / 2 - y - 10*j
-            cell.address = (i,j)
             listCells.append(cell)
             cell.on_click_listener()
+            print(f'Red: {redMoveCount}')
+            print(f'Green: {greenMoveCount}')
 
 def start():
     global something_clicked
@@ -254,13 +325,13 @@ def start():
         else:
             for i in listCells:
                 i.on_click_listener()
-            if len(listRedCells) > len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58 or len(listGreenCells)==0:
+            if len(listRedCells) > len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58 or greenMoveCount==0 or len(listGreenCells)==0:
                 winText = smallfont2.render('Red win!', True, (0, 0, 0))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
             elif len(listRedCells) == len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58:
                 winText = smallfont2.render('Draw!', True, (0, 0, 0))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
-            elif len(listRedCells) < len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58 or len(listRedCells)==0:
+            elif len(listRedCells) < len(listGreenCells) and len(listRedCells)+len(listGreenCells)==58 or redMoveCount==0 or len(listRedCells)==0:
                 winText = smallfont2.render('Green win!', True, (0, 0, 0))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 25))
             else:
