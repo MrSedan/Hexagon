@@ -25,7 +25,7 @@ class Cell():
                         main_window.redMove = True
                     main_window.listNearestCells = set()
                     main_window.listFarCells = set()
-                    main_window.SCREEN.fill((255, 255, 255))
+                    main_window.SCREEN.fill(main_window.SCREEN_COLOR)
                     main_window.displayhexagon()
                     return
 
@@ -42,7 +42,7 @@ class Cell():
                         main_window.redMove = True
                     main_window.listNearestCells = set()
                     main_window.listFarCells = set()
-                    main_window.SCREEN.fill((255, 255, 255))
+                    main_window.SCREEN.fill(main_window.SCREEN_COLOR)
                     main_window.displayhexagon()
                     return
                 main_window.listNearestCells = set()
@@ -54,7 +54,7 @@ class Cell():
                     main_window.showFarCells(self)
                     main_window.clickedCell = self.address
                 print("Clicked on cell", self.address)
-                main_window.SCREEN.fill((255,255,255))
+                main_window.SCREEN.fill(main_window.SCREEN_COLOR)
                 main_window.displayhexagon()
             if pg.mouse.get_pressed(3)[0] == 0:
                 main_window.something_clicked = False
