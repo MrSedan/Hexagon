@@ -6,13 +6,13 @@ import menu_theme
 from cell import Cell
 
 pg.init()
-WIDTH = 1920
-HEIGHT = 1080
+WIDTH = 1280
+HEIGHT = 720
 FPS = 60
 smallfont = pg.font.Font("./fonts/Montserrat-Regular.ttf", 35)
 smallfont2 = pg.font.Font("./fonts/Montserrat-Regular.ttf", 20)
 
-SCREEN = pg.display.set_mode((0, 0),FULLSCREEN, vsync=1)
+SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
 something_clicked = False
 listCells = []
 listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0),
@@ -284,16 +284,16 @@ def displayhexagon():
             nearestCell = pg.image.load("nearestCell.png")
             farCell = pg.image.load("farCell.png")
             if (i, j) in listGreenCells:
-                SCREEN.blit(green_f, (x + 10 * i + 20, HEIGHT / 2 - y - 10 * j + 10))
+                SCREEN.blit(green_f, (x + 10 * i + 20, HEIGHT/1.5 - y - 10 * j + 10))
                 greenMoveCount += checkCellForMove(cell)
             if (i, j) in listRedCells:
-                SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT / 2 - y - 10 * j + 7))
+                SCREEN.blit(red_f, (x + 10 * i + 13, HEIGHT/1.5  - y - 10 * j + 7))
                 redMoveCount += checkCellForMove(cell)
-            if (i, j) in listNearestCells: SCREEN.blit(nearestCell, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
-            if (i, j) in listFarCells: SCREEN.blit(farCell, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
-            if (i, j) in listCellsAddresses: SCREEN.blit(cell.pic, (x + 10 * i, HEIGHT / 2 - y - 10 * j))
+            if (i, j) in listNearestCells: SCREEN.blit(nearestCell, (x + 10 * i, HEIGHT/1.5  - y - 10 * j))
+            if (i, j) in listFarCells: SCREEN.blit(farCell, (x + 10 * i, HEIGHT/1.5  - y - 10 * j))
+            if (i, j) in listCellsAddresses: SCREEN.blit(cell.pic, (x + 10 * i, HEIGHT/1.5  - y - 10 * j))
             cell.x = x + 10 * i
-            cell.y = HEIGHT / 2 - y - 10 * j
+            cell.y = HEIGHT/1.5  - y - 10 * j
             listCells.append(cell)
             cell.on_click_listener()
 
@@ -312,7 +312,7 @@ def start():
     global something_clicked, playing
     clock = pg.time.Clock()
     SCREEN.fill(SCREEN_COLOR)
-    menu = pygame_menu.Menu('Hexagon', 1536, 864, theme=menu_theme.menu_theme)
+    menu = pygame_menu.Menu('Hexagon', WIDTH, HEIGHT, theme=menu_theme.menu_theme)
     menu.add.button('Play',start_the_game, menu)
     menu.add.button('Quit', pygame_menu.events.PYGAME_QUIT)
     menu.mainloop(SCREEN)
