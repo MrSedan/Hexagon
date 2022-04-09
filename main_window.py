@@ -13,6 +13,9 @@ smallfont = pg.font.Font("./fonts/Montserrat-Regular.ttf", 35)
 smallfont2 = pg.font.Font("./fonts/Montserrat-Regular.ttf", 20)
 
 SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
+pg.display.set_caption("Hexagon game")
+icon = pg.image.load("red_f.png")
+pg.display.set_icon(icon)
 something_clicked = False
 listCells = []
 listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0),
@@ -312,7 +315,7 @@ def start():
     global something_clicked, playing
     clock = pg.time.Clock()
     SCREEN.fill(SCREEN_COLOR)
-    menu = pygame_menu.Menu('Hexagon', WIDTH, HEIGHT, theme=menu_theme.menu_theme)
+    menu = pygame_menu.Menu('Hexagon', WIDTH, HEIGHT, theme=menu_theme.menu_theme, column_min_width=100)
     menu.add.button('Play',start_the_game, menu)
     menu.add.button('Quit', pygame_menu.events.PYGAME_QUIT)
     menu.mainloop(SCREEN)
@@ -322,7 +325,7 @@ def start():
                 return
             if i.type == MOUSEBUTTONDOWN:
                 if playing:
-                    if WIDTH - 600 <= mouse[0] <= WIDTH - 420 and 20 <= mouse[1] <= 100:
+                    if WIDTH - 400 <= mouse[0] <= WIDTH - 220 and 20 <= mouse[1] <= 100:
                         something_clicked = True
                         playing = False
                         SCREEN.fill(SCREEN_COLOR)
@@ -335,32 +338,38 @@ def start():
             if len(listRedCells) > len(listGreenCells) and len(listRedCells) + len(
                     listGreenCells) == 58 or greenMoveCount == 0 or len(listGreenCells) == 0:
                 winText = smallfont2.render('Red win!', True, (255, 255, 255))
-                SCREEN.blit(winText, (WIDTH / 4 - winText.get_width() / 2, 50))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
             elif len(listRedCells) == len(listGreenCells) and len(listRedCells) + len(listGreenCells) == 58:
                 winText = smallfont2.render('Draw!', True, (255, 255, 255))
-                SCREEN.blit(winText, (WIDTH / 4 - winText.get_width() / 2, 50))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
             elif len(listRedCells) < len(listGreenCells) and len(listRedCells) + len(
                     listGreenCells) == 58 or redMoveCount == 0 or len(listRedCells) == 0:
                 winText = smallfont2.render('Green win!', True, (255, 255, 255))
-                SCREEN.blit(winText, (WIDTH / 4 - winText.get_width() / 2, 25))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 25))
             else:
                 winText = smallfont2.render('Playing', True, (255, 255, 255))
-                SCREEN.blit(winText, (WIDTH / 4 - winText.get_width() / 2, 50))
+                SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
                 move = smallfont2.render(f'{"Red" if redMove else "Green"} turn', True,
                                          (255, 0, 0) if redMove else (0, 255, 0))
-                SCREEN.blit(move, (WIDTH / 4 - move.get_width() / 2, 30))
-
-            if WIDTH - 600 <= mouse[0] <= WIDTH - 420 and 20 <= mouse[1] <= 100:
-                pg.draw.rect(SCREEN, (108, 108, 108), [WIDTH - 600, 20, 180, 80], 0, 3)
+                SCREEN.blit(move, (WIDTH / 2 - move.get_width() / 2, 30))
+            if redMove:
+                if WIDTH - 400 <= mouse[0] <= WIDTH - 220 and 20 <= mouse[1] <= 100:
+                    pg.draw.rect(SCREEN, (255, 0, 0), [WIDTH - 400, 20, 180, 80], 0, 3)
+                else:
+                    pg.draw.rect(SCREEN, (255, 115, 115), [WIDTH - 400, 20, 180, 80], 0, 3)
             else:
-                pg.draw.rect(SCREEN, (108, 100, 80), [WIDTH - 600, 20, 180, 80], 0, 3)
+                if WIDTH - 400 <= mouse[0] <= WIDTH - 220 and 20 <= mouse[1] <= 100:
+                    pg.draw.rect(SCREEN, (48, 191, 65), [WIDTH - 400, 20, 180, 80], 0, 3)
+                else:
+                    pg.draw.rect(SCREEN, (40, 255, 87), [WIDTH - 400, 20, 180, 80], 0, 3)
+
             green_count = smallfont2.render(f'Green: {len(listGreenCells)}', True, (255, 255, 255))
             SCREEN.blit(green_count, (WIDTH / 2 - winText.get_width() / 2 - 150, 15))
             red_count = smallfont2.render(f'Red: {len(listRedCells)}', True, (255, 255, 255))
 
             SCREEN.blit(red_count, (WIDTH / 2 - winText.get_width() / 2 - 150, 45))
             back_text = smallfont2.render('Main menu', True, (255, 255, 255))
-            SCREEN.blit(back_text, (WIDTH - 620 + back_text.get_width() / 2, 45))
+            SCREEN.blit(back_text, (WIDTH - 420  + back_text.get_width() / 2, 45))
             # draw_regular_polygon(screen, (0, 0, 0), 6, 300, (width / 2, height / 2), 1)
             # displayhexagon()
         clock.tick(FPS)
