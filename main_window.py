@@ -33,6 +33,7 @@ greenMoveCount = 0
 redMove = True
 win = False
 SCREEN_COLOR = (0,0,0)
+in_help = False
 
 
 def initialize():
@@ -295,12 +296,21 @@ def start_the_game(menu: pygame_menu.menu):
     initialize()
     displayhexagon()
 
+def show_help_win(menu: pygame_menu.menu):
+    global something_clicked, in_help
+    in_help = True
+    something_clicked = True
+    menu.disable()
+    SCREEN.fill(SCREEN_COLOR)
+
+
 def start():
-    global something_clicked, playing
+    global something_clicked, playing, in_help
     clock = pg.time.Clock()
     SCREEN.fill(SCREEN_COLOR)
     menu = pygame_menu.Menu('Hexagon', WIDTH, HEIGHT, theme=menu_theme.menu_theme, column_min_width=100)
     menu.add.button('Play',start_the_game, menu)
+    menu.add.button('Help', show_help_win, menu)
     menu.add.button('Quit', pygame_menu.events.PYGAME_QUIT)
     menu.mainloop(SCREEN)
     while 1:
@@ -312,6 +322,13 @@ def start():
                     if WIDTH - 400 <= mouse[0] <= WIDTH - 220 and 20 <= mouse[1] <= 100:
                         something_clicked = True
                         playing = False
+                        SCREEN.fill(SCREEN_COLOR)
+                        menu.enable()
+                        menu.mainloop(SCREEN)
+                if in_help:
+                    if WIDTH/2-90 <= mouse[0] <= WIDTH/2+90 and HEIGHT-100 <= mouse[1] <= HEIGHT-20:
+                        something_clicked = True
+                        in_help = False
                         SCREEN.fill(SCREEN_COLOR)
                         menu.enable()
                         menu.mainloop(SCREEN)
@@ -354,5 +371,33 @@ def start():
             SCREEN.blit(red_count, (WIDTH / 2 - winText.get_width() / 2 - 150, 45))
             back_text = smallfont2.render('Main menu', True, (255, 255, 255))
             SCREEN.blit(back_text, (WIDTH - 420  + back_text.get_width() / 2, 45))
+        elif in_help:
+            if WIDTH/2-90 <= mouse[0] <= WIDTH/2+90 and HEIGHT-100 <= mouse[1] <= HEIGHT-20:
+                pg.draw.rect(SCREEN, (255, 0, 0), [WIDTH/2-90, HEIGHT-100, 180, 80], 0, 3)
+            else:
+                pg.draw.rect(SCREEN, (255, 115, 115), [WIDTH/2-90, HEIGHT-100, 180, 80], 0, 3)
+            back_text = smallfont2.render('Main menu', True, (255,255,255))
+            SCREEN.blit(back_text, (WIDTH/2-110+back_text.get_width()/2, HEIGHT-75))
+            font = pg.font.Font("./fonts/Montserrat-Regular.ttf", 18)
+            text = [
+                'Hexagon — стратегия для двоих, а цель игры заключается в захвате как можно большего числа ячеек фишками.',
+                'Игра происходит на гексагональном поле, составленном из шестиугольных полей.',
+                'В центре поля отсутствуют 3 клетки для хода.',
+                'На противоположных углах находятся фишки игроков, при этом фишки одного игрока не находятся на соседних углах.',
+                'Фишками можно ходить на соседние клетки, тогда фишка продублируется.',
+                'Если же походить через клетку, фишка переместится.',
+                'После хода все соседние фишки соперника закрашиваются в ваш цвет.',
+                'Изначально на поле расположено одинаковое число фишек как у соперника, ',
+                'так и у вас, кроме того, все фишки располагаются симметрично.'
+            ]
+            label = []
+            label_rect = []
+            for i,e in enumerate(text):
+                a = font.render(e, True, (255,255,255))
+                label.append(a)
+                label_rect.append(a.get_rect(center=(WIDTH/2, HEIGHT/2+i*20-200)))
+            for i in range(len(label)):
+                SCREEN.blit(label[i],label_rect[i])
+
         clock.tick(FPS)
         pg.display.update()
