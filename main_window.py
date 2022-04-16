@@ -23,8 +23,6 @@ listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1
                       (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 6), (4, 7), (4, 8), (5, 0), (5, 1), (5, 2),
                       (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (7, 0),
                       (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4)]
-# listRedCells = {(3,0),(4,0),(5,0)}
-# listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
 listGreenCells = {(0, 0), (4, 8), (8, 0)}
 listRedCells = {(0, 4), (4, 0), (8, 4)}
 listNearestCells = set()
@@ -49,8 +47,6 @@ def initialize():
                           (8, 2), (8, 3), (8, 4)]
     listGreenCells = {(0, 0), (4, 8), (8, 0)}
     listRedCells = {(0, 4), (4, 0), (8, 4)}
-    # listRedCells = {(3, 0), (4, 0), (5, 0)}
-    # listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
     listNearestCells = set()
     listFarCells = set()
     clickedCell = ()
@@ -210,7 +206,6 @@ def checkNearCellsForAnotherChips(cell: Cell):
             listGreenCells.add((i - 1, j))
 
 
-# Мне самому страшно, что я написал, но оно работает...
 def checkCellForMove(cell: Cell):
     i, j = cell.address[:]
     t = 0
@@ -219,53 +214,42 @@ def checkCellForMove(cell: Cell):
             if (i + 2, j - 1) in listCellsAddresses and (i + 2, j - 1) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j) in listCellsAddresses and (i + 2, j) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j + 1) in listCellsAddresses and (i + 2, j + 1) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i+2,j-1),(i+2,j),(i+2,j+1)} & (listRedCells|listGreenCells))
         else:
             if (i + 2, j) in listCellsAddresses and (i + 2, j) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j + 1) in listCellsAddresses and (i + 2, j + 1) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j + 2) in listCellsAddresses and (i + 2, j + 2) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i+2,j),(i+2,j+1),(i+2,j+2)} & (listRedCells|listGreenCells))
     else:
         if (i + 2, j - 2) in listCellsAddresses and (i + 2, j - 2) not in listRedCells | listGreenCells: t += 1
         if (i + 2, j - 1) in listCellsAddresses and (i + 2, j - 1) not in listRedCells | listGreenCells: t += 1
         if (i + 2, j) in listCellsAddresses and (i + 2, j) not in listRedCells | listGreenCells: t += 1
-        # t+= len({(i+2,j-2),(i+2,j-1),(i+2,j)} & (listRedCells|listGreenCells))
     if i > 4:
         if i == 5:
             if (i - 2, j - 1) in listCellsAddresses and (i - 2, j - 1) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j) in listCellsAddresses and (i - 2, j) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j + 1) in listCellsAddresses and (i - 2, j + 1) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i-2,j-1),(i-2,j),(i-2,j+1)} & (listRedCells|listGreenCells))
         else:
             if (i - 2, j) in listCellsAddresses and (i - 2, j) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j + 1) in listCellsAddresses and (i - 2, j + 1) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j + 2) in listCellsAddresses and (i - 2, j + 2) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i-2,j),(i-2,j+1),(i-2,j+2)} & (listRedCells|listGreenCells))
     else:
         if (i - 2, j) in listCellsAddresses and (i - 2, j) not in listRedCells | listGreenCells: t += 1
         if (i - 2, j - 1) in listCellsAddresses and (i - 2, j - 1) not in listRedCells | listGreenCells: t += 1
         if (i - 2, j - 2) in listCellsAddresses and (i - 2, j - 2) not in listRedCells | listGreenCells: t += 1
-        # t+=len({(i-2,j),(i-2,j+1),(i-2,j+2)} & (listGreenCells|listRedCells))
     if (i, j + 2) in listCellsAddresses and (i, j + 2) not in listRedCells | listGreenCells: t += 1
     if (i, j - 2) in listCellsAddresses and (i, j - 2) not in listRedCells | listGreenCells: t += 1
-    # t+= len({(i,j+2),(i,j-2)} & (listRedCells|listGreenCells))
 
     if i >= 4:
         if (i + 1, j + 1) in listCellsAddresses and (i + 1, j + 1) not in listRedCells | listGreenCells: t += 1
         if (i + 1, j - 2) in listCellsAddresses and (i + 1, j - 2) not in listRedCells | listGreenCells: t += 1
-        # t+= len({(i+1,j+1),(i+1,j-2)} & (listGreenCells|listRedCells))
     else:
         if (i + 1, j + 2) in listCellsAddresses and (i + 1, j + 2) not in listRedCells | listGreenCells: t += 1
         if (i + 1, j - 1) in listCellsAddresses and (i + 1, j - 1) not in listRedCells | listGreenCells: t += 1
-        # t+=len({(i+1,j+2), (i+1,j-1)} & (listGreenCells|listRedCells))
     if i <= 4:
         if (i - 1, j + 1) in listCellsAddresses and (i - 1, j + 1) not in listRedCells | listGreenCells: t += 1
         if (i - 1, j - 2) in listCellsAddresses and (i - 1, j - 2) not in listRedCells | listGreenCells: t += 1
-        # t+= len({(i-1,j+1),(i-1,j-2)} & (listGreenCells|listRedCells))
     else:
         if (i - 1, j + 2) in listCellsAddresses and (i - 1, j + 2) not in listRedCells | listGreenCells: t += 1
         if (i - 1, j - 1) in listCellsAddresses and (i - 1, j - 1) not in listRedCells | listGreenCells: t += 1
-        # t+=len({(i-1,j+2),(i-1,j-1)} & (listGreenCells|listRedCells))
     return t
 
 def return_to_main_menu():
@@ -370,7 +354,5 @@ def start():
             SCREEN.blit(red_count, (WIDTH / 2 - winText.get_width() / 2 - 150, 45))
             back_text = smallfont2.render('Main menu', True, (255, 255, 255))
             SCREEN.blit(back_text, (WIDTH - 420  + back_text.get_width() / 2, 45))
-            # draw_regular_polygon(screen, (0, 0, 0), 6, 300, (width / 2, height / 2), 1)
-            # displayhexagon()
         clock.tick(FPS)
         pg.display.update()
