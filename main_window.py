@@ -23,8 +23,6 @@ listCellsAddresses = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 0), (1, 1), (1
                       (3, 7), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 6), (4, 7), (4, 8), (5, 0), (5, 1), (5, 2),
                       (5, 4), (5, 5), (5, 6), (5, 7), (6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (6, 5), (6, 6), (7, 0),
                       (7, 1), (7, 2), (7, 3), (7, 4), (7, 5), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4)]
-# listRedCells = {(3,0),(4,0),(5,0)}
-# listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
 listGreenCells = {(0, 0), (4, 8), (8, 0)}
 listRedCells = {(0, 4), (4, 0), (8, 4)}
 listNearestCells = set()
@@ -35,6 +33,7 @@ greenMoveCount = 0
 redMove = True
 win = False
 SCREEN_COLOR = (0,0,0)
+in_help = False
 
 
 def initialize():
@@ -49,8 +48,6 @@ def initialize():
                           (8, 2), (8, 3), (8, 4)]
     listGreenCells = {(0, 0), (4, 8), (8, 0)}
     listRedCells = {(0, 4), (4, 0), (8, 4)}
-    # listRedCells = {(3, 0), (4, 0), (5, 0)}
-    # listGreenCells = {(1,0),(2,0),(3,1),(4,1),(4,2),(5,1),(6,0),(7,0),(5,2),(6,1),(3,2),(2,1)}
     listNearestCells = set()
     listFarCells = set()
     clickedCell = ()
@@ -210,7 +207,6 @@ def checkNearCellsForAnotherChips(cell: Cell):
             listGreenCells.add((i - 1, j))
 
 
-# Мне самому страшно, что я написал, но оно работает...
 def checkCellForMove(cell: Cell):
     i, j = cell.address[:]
     t = 0
@@ -219,53 +215,42 @@ def checkCellForMove(cell: Cell):
             if (i + 2, j - 1) in listCellsAddresses and (i + 2, j - 1) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j) in listCellsAddresses and (i + 2, j) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j + 1) in listCellsAddresses and (i + 2, j + 1) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i+2,j-1),(i+2,j),(i+2,j+1)} & (listRedCells|listGreenCells))
         else:
             if (i + 2, j) in listCellsAddresses and (i + 2, j) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j + 1) in listCellsAddresses and (i + 2, j + 1) not in listRedCells | listGreenCells: t += 1
             if (i + 2, j + 2) in listCellsAddresses and (i + 2, j + 2) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i+2,j),(i+2,j+1),(i+2,j+2)} & (listRedCells|listGreenCells))
     else:
         if (i + 2, j - 2) in listCellsAddresses and (i + 2, j - 2) not in listRedCells | listGreenCells: t += 1
         if (i + 2, j - 1) in listCellsAddresses and (i + 2, j - 1) not in listRedCells | listGreenCells: t += 1
         if (i + 2, j) in listCellsAddresses and (i + 2, j) not in listRedCells | listGreenCells: t += 1
-        # t+= len({(i+2,j-2),(i+2,j-1),(i+2,j)} & (listRedCells|listGreenCells))
     if i > 4:
         if i == 5:
             if (i - 2, j - 1) in listCellsAddresses and (i - 2, j - 1) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j) in listCellsAddresses and (i - 2, j) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j + 1) in listCellsAddresses and (i - 2, j + 1) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i-2,j-1),(i-2,j),(i-2,j+1)} & (listRedCells|listGreenCells))
         else:
             if (i - 2, j) in listCellsAddresses and (i - 2, j) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j + 1) in listCellsAddresses and (i - 2, j + 1) not in listRedCells | listGreenCells: t += 1
             if (i - 2, j + 2) in listCellsAddresses and (i - 2, j + 2) not in listRedCells | listGreenCells: t += 1
-            # t+=len({(i-2,j),(i-2,j+1),(i-2,j+2)} & (listRedCells|listGreenCells))
     else:
         if (i - 2, j) in listCellsAddresses and (i - 2, j) not in listRedCells | listGreenCells: t += 1
         if (i - 2, j - 1) in listCellsAddresses and (i - 2, j - 1) not in listRedCells | listGreenCells: t += 1
         if (i - 2, j - 2) in listCellsAddresses and (i - 2, j - 2) not in listRedCells | listGreenCells: t += 1
-        # t+=len({(i-2,j),(i-2,j+1),(i-2,j+2)} & (listGreenCells|listRedCells))
     if (i, j + 2) in listCellsAddresses and (i, j + 2) not in listRedCells | listGreenCells: t += 1
     if (i, j - 2) in listCellsAddresses and (i, j - 2) not in listRedCells | listGreenCells: t += 1
-    # t+= len({(i,j+2),(i,j-2)} & (listRedCells|listGreenCells))
 
     if i >= 4:
         if (i + 1, j + 1) in listCellsAddresses and (i + 1, j + 1) not in listRedCells | listGreenCells: t += 1
         if (i + 1, j - 2) in listCellsAddresses and (i + 1, j - 2) not in listRedCells | listGreenCells: t += 1
-        # t+= len({(i+1,j+1),(i+1,j-2)} & (listGreenCells|listRedCells))
     else:
         if (i + 1, j + 2) in listCellsAddresses and (i + 1, j + 2) not in listRedCells | listGreenCells: t += 1
         if (i + 1, j - 1) in listCellsAddresses and (i + 1, j - 1) not in listRedCells | listGreenCells: t += 1
-        # t+=len({(i+1,j+2), (i+1,j-1)} & (listGreenCells|listRedCells))
     if i <= 4:
         if (i - 1, j + 1) in listCellsAddresses and (i - 1, j + 1) not in listRedCells | listGreenCells: t += 1
         if (i - 1, j - 2) in listCellsAddresses and (i - 1, j - 2) not in listRedCells | listGreenCells: t += 1
-        # t+= len({(i-1,j+1),(i-1,j-2)} & (listGreenCells|listRedCells))
     else:
         if (i - 1, j + 2) in listCellsAddresses and (i - 1, j + 2) not in listRedCells | listGreenCells: t += 1
         if (i - 1, j - 1) in listCellsAddresses and (i - 1, j - 1) not in listRedCells | listGreenCells: t += 1
-        # t+=len({(i-1,j+2),(i-1,j-1)} & (listGreenCells|listRedCells))
     return t
 
 def return_to_main_menu():
@@ -311,12 +296,21 @@ def start_the_game(menu: pygame_menu.menu):
     initialize()
     displayhexagon()
 
+def show_help_win(menu: pygame_menu.menu):
+    global something_clicked, in_help
+    in_help = True
+    something_clicked = True
+    menu.disable()
+    SCREEN.fill(SCREEN_COLOR)
+
+
 def start():
-    global something_clicked, playing
+    global something_clicked, playing, in_help
     clock = pg.time.Clock()
     SCREEN.fill(SCREEN_COLOR)
     menu = pygame_menu.Menu('Hexagon', WIDTH, HEIGHT, theme=menu_theme.menu_theme, column_min_width=100)
     menu.add.button('Play',start_the_game, menu)
+    menu.add.button('Help', show_help_win, menu)
     menu.add.button('Quit', pygame_menu.events.PYGAME_QUIT)
     menu.mainloop(SCREEN)
     while 1:
@@ -328,6 +322,13 @@ def start():
                     if WIDTH - 400 <= mouse[0] <= WIDTH - 220 and 20 <= mouse[1] <= 100:
                         something_clicked = True
                         playing = False
+                        SCREEN.fill(SCREEN_COLOR)
+                        menu.enable()
+                        menu.mainloop(SCREEN)
+                if in_help:
+                    if WIDTH/2-90 <= mouse[0] <= WIDTH/2+90 and HEIGHT-100 <= mouse[1] <= HEIGHT-20:
+                        something_clicked = True
+                        in_help = False
                         SCREEN.fill(SCREEN_COLOR)
                         menu.enable()
                         menu.mainloop(SCREEN)
@@ -370,7 +371,33 @@ def start():
             SCREEN.blit(red_count, (WIDTH / 2 - winText.get_width() / 2 - 150, 45))
             back_text = smallfont2.render('Main menu', True, (255, 255, 255))
             SCREEN.blit(back_text, (WIDTH - 420  + back_text.get_width() / 2, 45))
-            # draw_regular_polygon(screen, (0, 0, 0), 6, 300, (width / 2, height / 2), 1)
-            # displayhexagon()
+        elif in_help:
+            if WIDTH/2-90 <= mouse[0] <= WIDTH/2+90 and HEIGHT-100 <= mouse[1] <= HEIGHT-20:
+                pg.draw.rect(SCREEN, (255, 0, 0), [WIDTH/2-90, HEIGHT-100, 180, 80], 0, 3)
+            else:
+                pg.draw.rect(SCREEN, (255, 115, 115), [WIDTH/2-90, HEIGHT-100, 180, 80], 0, 3)
+            back_text = smallfont2.render('Main menu', True, (255,255,255))
+            SCREEN.blit(back_text, (WIDTH/2-110+back_text.get_width()/2, HEIGHT-75))
+            font = pg.font.Font("./fonts/Montserrat-Regular.ttf", 18)
+            text = [
+                'Hexagon — стратегия для двоих, а цель игры заключается в захвате как можно большего числа ячеек фишками.',
+                'Игра происходит на гексагональном поле, составленном из шестиугольных полей.',
+                'В центре поля отсутствуют 3 клетки для хода.',
+                'На противоположных углах находятся фишки игроков, при этом фишки одного игрока не находятся на соседних углах.',
+                'Фишками можно ходить на соседние клетки, тогда фишка продублируется.',
+                'Если же походить через клетку, фишка переместится.',
+                'После хода все соседние фишки соперника закрашиваются в ваш цвет.',
+                'Изначально на поле расположено одинаковое число фишек как у соперника, ',
+                'так и у вас, кроме того, все фишки располагаются симметрично.'
+            ]
+            label = []
+            label_rect = []
+            for i,e in enumerate(text):
+                a = font.render(e, True, (255,255,255))
+                label.append(a)
+                label_rect.append(a.get_rect(center=(WIDTH/2, HEIGHT/2+i*20-200)))
+            for i in range(len(label)):
+                SCREEN.blit(label[i],label_rect[i])
+
         clock.tick(FPS)
         pg.display.update()
