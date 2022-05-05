@@ -337,14 +337,14 @@ def start():
             for i in listCells:
                 i.on_click_listener()
             if len(listRedCells) > len(listGreenCells) and len(listRedCells) + len(
-                    listGreenCells) == 58 or greenMoveCount == 0 or len(listGreenCells) == 0:
+                    listGreenCells) == 58 or len(listGreenCells) == 0 or (len(listRedCells) > len(listGreenCells) and greenMoveCount == 0):
                 winText = smallfont2.render('Red win!', True, (255, 255, 255))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
             elif len(listRedCells) == len(listGreenCells) and len(listRedCells) + len(listGreenCells) == 58:
                 winText = smallfont2.render('Draw!', True, (255, 255, 255))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 50))
             elif len(listRedCells) < len(listGreenCells) and len(listRedCells) + len(
-                    listGreenCells) == 58 or redMoveCount == 0 or len(listRedCells) == 0:
+                    listGreenCells) == 58 or len(listRedCells) == 0 or (len(listRedCells) < len(listGreenCells) and redMoveCount == 0):
                 winText = smallfont2.render('Green win!', True, (255, 255, 255))
                 SCREEN.blit(winText, (WIDTH / 2 - winText.get_width() / 2, 25))
             else:
