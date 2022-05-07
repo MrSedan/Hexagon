@@ -23,3 +23,5 @@ Run _pyinstaller_:
 ```
 pyinstaller main.spec
 ```
+
+Exe-file will in the `dist/main` folder.
