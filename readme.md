@@ -12,7 +12,8 @@ python main.py
 
 ***
 <h1>Building Exe-file</h1>
-Install _pyinsteller_:
+
+Install _pyinstaller_ :
 
 ```
 pip install pyinstaller
