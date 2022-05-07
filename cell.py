@@ -1,9 +1,15 @@
 import pygame as pg
-import main_window
+import main_window, os, sys
+
+def resource_path(relative):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative)
+    return os.path.join(relative)
 
 class Cell():
     def __init__(self):
-        self.pic = pg.image.load('im1.png')
+        path = resource_path('im1.png')
+        self.pic = pg.image.load(path)
         self.rect = self.pic.get_rect()
         self.x = 0
         self.y = 0

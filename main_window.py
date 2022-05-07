@@ -1,20 +1,27 @@
 import pygame as pg
 from pygame.locals import *
-import pygame_menu
+import pygame_menu, sys, os
 import menu_theme
 
 from cell import Cell
+
+def resource_path(relative):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative)
+    return os.path.join(relative)
 
 pg.init()
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
-smallfont = pg.font.Font("./fonts/Montserrat-Regular.ttf", 35)
-smallfont2 = pg.font.Font("./fonts/Montserrat-Regular.ttf", 20)
+path = resource_path(os.path.join('fonts','Montserrat-Regular.ttf'))
+smallfont = pg.font.Font(path, 35)
+smallfont2 = pg.font.Font(path, 20)
 
 SCREEN = pg.display.set_mode((WIDTH, HEIGHT), vsync=1)
 pg.display.set_caption("Hexagon game")
-icon = pg.image.load("red_f.png")
+path = resource_path("red_f.png")
+icon = pg.image.load(path)
 pg.display.set_icon(icon)
 something_clicked = False
 listCells = []
@@ -267,10 +274,14 @@ def displayhexagon():
             y = 30 * j + abs(i - 4) * 15
             cell = Cell()
             cell.address = (i, j)
-            green_f = pg.image.load("green_f.png")
-            red_f = pg.image.load("red_f.png")
-            nearestCell = pg.image.load("nearestCell.png")
-            farCell = pg.image.load("farCell.png")
+            path = resource_path("green_f.png")
+            green_f = pg.image.load(path)
+            path = resource_path("red_f.png")
+            red_f = pg.image.load(path)
+            path = resource_path("nearestCell.png")
+            nearestCell = pg.image.load(path)
+            path = resource_path("farCell.png")
+            farCell = pg.image.load(path)
             if (i, j) in listGreenCells:
                 SCREEN.blit(green_f, (x + 10 * i + 20, HEIGHT/1.5 - y - 10 * j + 10))
                 greenMoveCount += checkCellForMove(cell)
@@ -378,7 +389,8 @@ def start():
                 pg.draw.rect(SCREEN, (255, 115, 115), [WIDTH/2-90, HEIGHT-100, 180, 80], 0, 3)
             back_text = smallfont2.render('Main menu', True, (255,255,255))
             SCREEN.blit(back_text, (WIDTH/2-110+back_text.get_width()/2, HEIGHT-75))
-            font = pg.font.Font("./fonts/Montserrat-Regular.ttf", 18)
+            path = resource_path(os.path.join('fonts','Montserrat-Regular.ttf'))
+            font = pg.font.Font(path, 18)
             text = [
                 'Hexagon — стратегия для двоих, а цель игры заключается в захвате как можно большего числа ячеек фишками.',
                 'Игра происходит на гексагональном поле, составленном из шестиугольных полей.',
