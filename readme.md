@@ -1,4 +1,4 @@
-<h1>Hexagon game</h1>
+<h1>Hexagon game - интеллектуальная игра</h1>
 Install requirements:
 
 ```
